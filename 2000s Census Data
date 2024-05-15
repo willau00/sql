@@ -1,0 +1,31 @@
+-- Data imported from http://2016.padjo.org/tutorials/sqlite-data-starterpacks/#toc-census-2000-surnames
+-- Queries performed on Dbeaver
+
+--What are the most popular names, ranked, in the 2000 census?
+SELECT name, rank 
+FROM surnames 
+WHERE rank <= 100;
+
+--What are the most popular last names in which the majority do not identify as white?
+SELECT name, rank, pctwhite 
+FROM surnames 
+WHERE rank <= 1000 AND pctwhite < 50 
+ORDER BY -rank
+DESC LIMIT 100;
+
+--Can we get a list of names in alphebetic order? Exclude any Null values.
+SELECT *
+FROM surnames
+WHERE name IS NOT NULL
+ORDER BY name;
+
+--Can we identify names as popular, uncommon, or rare? (Bin our data)
+SELECT name, prop100k,
+CASE
+	WHEN prop100k <= 250 THEN "Rare"
+	WHEN prop100k <= 1000 THEN "Uncommon"
+	ELSE "Common"
+END
+FROM surnames
+ORDER BY prop100k;
+
